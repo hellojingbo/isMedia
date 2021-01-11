@@ -1,6 +1,7 @@
 package com.bornya.ismedia.auth;
 
 import com.bornya.ismedia.Proxyable;
+import com.bornya.ismedia.auth.oauth2.YoutubeOAuth2App;
 import com.bornya.ismedia.model.Proxy;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.StoredCredential;
@@ -16,6 +17,7 @@ import com.google.api.client.util.store.DataStore;
 import com.google.api.client.util.store.FileDataStoreFactory;
 import com.google.common.collect.Lists;
 
+import java.awt.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.util.List;
@@ -79,6 +81,6 @@ public class YoutubeAuth extends Proxyable implements IAuth<Credential>{
         LocalServerReceiver localReceiver = new LocalServerReceiver.Builder().setPort(port).build();
 
         // Authorize.
-        return new AuthorizationCodeInstalledApp(flow, localReceiver).authorize("user");
+        return new YoutubeOAuth2App(flow, localReceiver).authorize("user");
     }
 }
