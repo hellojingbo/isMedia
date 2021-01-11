@@ -8,6 +8,7 @@ import com.bornya.ismedia.exception.PlatformNotSupportException;
 import com.bornya.ismedia.model.Video;
 import com.bornya.ismedia.upload.IUploader;
 import com.bornya.ismedia.upload.YoutubeUploader;
+import com.bornya.ismedia.utils.MD5Utils;
 import com.bornya.ismedia.utils.StringUtils;
 import com.google.api.client.auth.oauth2.Credential;
 
@@ -45,6 +46,7 @@ public class AppTrigger extends Proxyable{
                 try{
                     IAuth<Credential> youtubeAuth = new YoutubeAuth();
                     userName = StringUtils.isEmpty(userName) ? DEFAULT_USERNAME : userName;
+                    userName = MD5Utils.encrypt16(userName);
                     youtubeAuth.authorize(userName);
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -62,6 +64,7 @@ public class AppTrigger extends Proxyable{
         Video video = JSON.parseObject(videoInfo, Video.class);
         SupportPlatform[] supportPlatforms = SupportPlatform.values();
         userName = StringUtils.isEmpty(userName) ? DEFAULT_USERNAME : userName;
+        userName = MD5Utils.encrypt16(userName);
 
         List<SupportPlatform> uploadPlatforms = new ArrayList<>();
 
