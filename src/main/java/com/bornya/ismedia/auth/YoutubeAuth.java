@@ -83,8 +83,10 @@ public class YoutubeAuth extends Proxyable implements IAuth<Credential>{
         // Build the local server and bind it to port 8080
         localReceiver = new LocalServerReceiver.Builder().setPort(port).build();
 
+        YoutubeOAuth2App app = new YoutubeOAuth2App(flow, localReceiver);
+        app.setEventListener(listener);
         // Authorize.
-        return new YoutubeOAuth2App(flow, localReceiver).authorize("user");
+        return app.authorize("user");
     }
 
     public void cancel(){
