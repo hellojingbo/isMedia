@@ -45,7 +45,7 @@ public abstract class YoutubeThumbnailUploader implements IUploader{
      *
      * @param args command line args (not used).
      */
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
 
         // This OAuth 2.0 access scope allows for full read/write access to the
         // authenticated user's account.
@@ -144,9 +144,9 @@ public abstract class YoutubeThumbnailUploader implements IUploader{
         }
     }
 
-    /*
+    *//*
      * Prompts the user to enter a YouTube video ID and return the user input.
-     */
+     *//*
     private static String getVideoIdFromUser() throws IOException {
 
         String inputVideoId = "";
@@ -164,9 +164,9 @@ public abstract class YoutubeThumbnailUploader implements IUploader{
         return inputVideoId;
     }
 
-    /*
+    *//*
      * Prompt the user to enter the path for the thumbnail image being uploaded.
-     */
+     *//*
     private static File getImageFromUser() throws IOException {
 
         String path = "";
@@ -182,5 +182,5 @@ public abstract class YoutubeThumbnailUploader implements IUploader{
         }
 
         return new File(path);
-    }
+    }*/
 }

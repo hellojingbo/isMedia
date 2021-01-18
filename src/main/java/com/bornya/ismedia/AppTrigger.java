@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.bornya.ismedia.auth.IAuth;
 import com.bornya.ismedia.auth.YoutubeAuth;
 import com.bornya.ismedia.exception.PlatformNotSupportException;
+import com.bornya.ismedia.listener.AuthEventListener;
 import com.bornya.ismedia.model.Video;
 import com.bornya.ismedia.upload.IUploader;
 import com.bornya.ismedia.upload.YoutubeUploader;
@@ -47,7 +48,12 @@ public class AppTrigger extends Proxyable{
                     IAuth<Credential> youtubeAuth = new YoutubeAuth();
                     userName = StringUtils.isEmpty(userName) ? DEFAULT_USERNAME : userName;
                     userName = MD5Utils.encrypt16(userName);
-                    youtubeAuth.authorize(userName);
+                    youtubeAuth.authorize(userName, new AuthEventListener() {
+                        @Override
+                        public void onAuthorization(String url) {
+                            super.onAuthorization(url);
+                        }
+                    });
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

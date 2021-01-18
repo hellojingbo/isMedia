@@ -15,6 +15,7 @@
 package com.bornya.ismedia.upload;
 import com.bornya.ismedia.auth.YoutubeAuth;
 import com.bornya.ismedia.config.ApplicationConfig;
+import com.bornya.ismedia.listener.AuthEventListener;
 import com.bornya.ismedia.model.RemoteVideoStatus;
 import com.bornya.ismedia.model.YoutubeVideoStatus;
 import com.google.api.client.auth.oauth2.Credential;
@@ -50,7 +51,7 @@ public class YoutubeUploader implements IUploader{
 
     public com.bornya.ismedia.model.Video upload(String userName, com.bornya.ismedia.model.Video video){
         try {
-            Credential credential = new YoutubeAuth().authorize(userName);
+            Credential credential = new YoutubeAuth().authorize(userName, new AuthEventListener() {});
 
             youtube = new YouTube.Builder(YoutubeAuth.HTTP_TRANSPORT, YoutubeAuth.JSON_FACTORY, credential).setApplicationName(
                     ApplicationConfig.APP_NAME).build();

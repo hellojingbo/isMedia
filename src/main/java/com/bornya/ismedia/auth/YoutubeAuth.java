@@ -2,6 +2,7 @@ package com.bornya.ismedia.auth;
 
 import com.bornya.ismedia.Proxyable;
 import com.bornya.ismedia.auth.oauth2.YoutubeOAuth2App;
+import com.bornya.ismedia.listener.AuthEventListener;
 import com.bornya.ismedia.model.Proxy;
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.auth.oauth2.StoredCredential;
@@ -44,13 +45,15 @@ public class YoutubeAuth extends Proxyable implements IAuth<Credential>{
 
     private static final List<String> YOUTUBE_SCOPES = Lists.newArrayList("https://www.googleapis.com/auth/youtube");
 
+    LocalServerReceiver localReceiver;
+
     /**
      * Authorizes the installed application to access user's protected data.
      *
      * @param userName              the username of Youtube, and it will be the credential datastore to cache OAuth tokens
      */
     @Override
-    public Credential authorize(String userName) throws IOException {
+    public Credential authorize(String userName, AuthEventListener listener) throws IOException {
 
         // Load client secrets.
         Reader clientSecretReader = new InputStreamReader(new FileInputStream("youtube_client_secrets.json"));
@@ -78,9 +81,19 @@ public class YoutubeAuth extends Proxyable implements IAuth<Credential>{
         serverSocket.close();
 
         // Build the local server and bind it to port 8080
-        LocalServerReceiver localReceiver = new LocalServerReceiver.Builder().setPort(port).build();
+        localReceiver = new LocalServerReceiver.Builder().setPort(port).build();
 
         // Authorize.
         return new YoutubeOAuth2App(flow, localReceiver).authorize("user");
+    }
+
+    public void cancel(){
+        try {
+            localReceiver.stop();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e){
+            e.printStackTrace();
+        }
     }
 }
