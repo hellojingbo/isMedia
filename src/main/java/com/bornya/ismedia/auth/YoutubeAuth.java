@@ -54,27 +54,7 @@ public class YoutubeAuth extends Proxyable implements IAuth<Credential>{
      */
     @Override
     public Credential authorize(String userName, AuthEventListener listener) throws IOException {
-
-        // Load client secrets.
-        Reader clientSecretReader = new InputStreamReader(new FileInputStream("youtube_client_secrets.json"));
-        GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, clientSecretReader);
-
-        // Checks that the defaults have been replaced (Default = "Enter X here").
-        if (clientSecrets.getDetails().getClientId().startsWith("Enter")
-                || clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
-            System.out.println(
-                    "Enter Client ID and Secret from https://console.developers.google.com/project/_/apiui/credential "
-                            + "into src/main/resources/youtube_client_secrets.json");
-            System.exit(1);
-        }
-
-        // This creates the credentials datastore at ~/.oauth-credentials/${credentialDatastore}
-        FileDataStoreFactory fileDataStoreFactory = new FileDataStoreFactory(new File(System.getProperty("user.home") + "/" + CREDENTIALS_DIRECTORY));
-        DataStore<StoredCredential> datastore = fileDataStoreFactory.getDataStore(userName);
-
-        GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
-                HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, YOUTUBE_SCOPES).setCredentialDataStore(datastore)
-                .build();
+        GoogleAuthorizationCodeFlow flow = generateAuthorizationCodeFlow(userName);
 
         ServerSocket serverSocket =  new ServerSocket(0); //读取空闲的可用端口
         int port = serverSocket.getLocalPort();
@@ -97,5 +77,41 @@ public class YoutubeAuth extends Proxyable implements IAuth<Credential>{
         } catch (NullPointerException e){
             e.printStackTrace();
         }
+    }
+
+    public boolean isAuthorized(String userName) throws IOException {
+
+        GoogleAuthorizationCodeFlow flow = generateAuthorizationCodeFlow(userName);
+        Credential credential = flow.loadCredential("user");
+        if (credential == null || credential.getRefreshToken() == null && credential.getExpiresInSeconds() != null && credential.getExpiresInSeconds() <= 60L) {
+            return false;
+        }else {
+            return true;
+        }
+    }
+
+    private GoogleAuthorizationCodeFlow generateAuthorizationCodeFlow(String userName) throws IOException {
+        // Load client secrets.
+        Reader clientSecretReader = new InputStreamReader(new FileInputStream("youtube_client_secrets.json"));
+        GoogleClientSecrets clientSecrets = GoogleClientSecrets.load(JSON_FACTORY, clientSecretReader);
+
+        // Checks that the defaults have been replaced (Default = "Enter X here").
+        if (clientSecrets.getDetails().getClientId().startsWith("Enter")
+                || clientSecrets.getDetails().getClientSecret().startsWith("Enter ")) {
+            System.out.println(
+                    "Enter Client ID and Secret from https://console.developers.google.com/project/_/apiui/credential "
+                            + "into src/main/resources/youtube_client_secrets.json");
+            System.exit(1);
+        }
+
+        // This creates the credentials datastore at ~/.oauth-credentials/${credentialDatastore}
+        FileDataStoreFactory fileDataStoreFactory = new FileDataStoreFactory(new File(System.getProperty("user.home") + "/" + CREDENTIALS_DIRECTORY));
+        DataStore<StoredCredential> datastore = fileDataStoreFactory.getDataStore(userName);
+
+        GoogleAuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
+                HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, YOUTUBE_SCOPES).setCredentialDataStore(datastore)
+                .build();
+
+        return flow;
     }
 }
