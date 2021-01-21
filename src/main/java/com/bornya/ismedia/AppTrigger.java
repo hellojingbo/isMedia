@@ -67,6 +67,9 @@ public class AppTrigger extends Proxyable{
     }
 
     public void toUpload(String platform, String videoInfo, String userName){
+        videoInfo = videoInfo.replaceAll("'", "\"");
+
+        System.out.println(videoInfo);
         Video video = JSON.parseObject(videoInfo, Video.class);
         SupportPlatform[] supportPlatforms = SupportPlatform.values();
         userName = StringUtils.isEmpty(userName) ? DEFAULT_USERNAME : userName;
