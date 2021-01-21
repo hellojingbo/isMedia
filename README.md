@@ -12,7 +12,7 @@ The software runs on PCs with Windows 10 and above on x64 platforms. For the sof
 ## How to use
 
 Please [download the latest version](https://github.com/Bornya/isMedia/releases) of the software from the software download page and extract it to a folder, and then run Powershell or cmd from that folder.
-Under the current version (v1.0.0), the individual functional commands of isMedia are as follows.
+Under the current version (v1.0.1), the individual functional commands of isMedia are as follows.
 
 1. Add an account
 
@@ -68,5 +68,5 @@ You are welcome to submit your question on the [issues page](https://github.com/
 ## Software Downloads
 
 You can download the latest version of the software by clicking on the following link. 
-- [latest release v1.0.0](https://github.com/Bornya/isMedia/releases)
+- [latest release v1.0.1](https://github.com/Bornya/isMedia/releases)
 
